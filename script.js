@@ -1,31 +1,33 @@
-document.getElementById('scan-form').addEventListener('submit', async function(event) {
+// Manejo del formulario para agregar valores al diccionario
+document.getElementById('add-dictionary-form').addEventListener('submit', async function(event) {
     event.preventDefault(); // Evita el comportamiento por defecto del formulario
     
-    const url = document.getElementById('url').value;
-    const keywords = document.getElementById('keywords').value.split(',').map(keyword => keyword.trim());
+    const title = document.getElementById('title').value;
+    const dateFormat = document.getElementById('date-format').value;
+    const predictionFormat = document.getElementById('prediction-format').value;
 
     const resultDiv = document.getElementById('result');
-    resultDiv.innerHTML = 'Escaneando...';
+    resultDiv.innerHTML = 'Agregando al diccionario...';
 
     try {
-        const response = await fetch('https://tip-tracker-backend.vercel.app/api/scan', {
+        const response = await fetch('https://tip-tracker-backend.vercel.app/api/add-dictionary', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ url, keywords }) // Enviamos también las palabras clave
+            body: JSON.stringify({ title, dateFormat, predictionFormat }) // Enviar los datos al backend
         });
 
         const data = await response.json();
         
-        if (data.success && data.tips.length > 0) {
-            resultDiv.innerHTML = `<h3>Tips Encontrados:</h3><ul>${data.tips.map(tip => `<li>${tip}</li>`).join('')}</ul>`;
+        if (data.success) {
+            resultDiv.innerHTML = '¡Datos agregados al diccionario!';
         } else {
-            resultDiv.innerHTML = 'No se encontraron tips con esas palabras clave.';
+            resultDiv.innerHTML = 'Error al agregar al diccionario.';
         }
 
     } catch (error) {
-        console.error('Error al escanear la web:', error);
-        resultDiv.innerHTML = 'Error al escanear la web. Intenta nuevamente.';
+        console.error('Error al agregar al diccionario:', error);
+        resultDiv.innerHTML = 'Error al agregar al diccionario. Intenta nuevamente.';
     }
 });
