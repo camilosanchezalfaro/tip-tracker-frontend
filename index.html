@@ -3,13 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Configuración de Páginas Web</title>
+    <title>Gestión de Páginas Web</title>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <style>
+        /* Estilos básicos para las pestañas */
+        .tab {
+            display: none;
+        }
+        .tab.active {
+            display: block;
+        }
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+        }
+        .tabs button {
+            margin-right: 10px;
+            padding: 10px;
+            cursor: pointer;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+    </style>
 </head>
 <body>
+
     <h1>Gestión de Configuración de Webs</h1>
 
-    <section id="add-web-config">
+    <div class="tabs">
+        <button onclick="showTab('register')">Registrar Web</button>
+        <button onclick="showTab('view')">Ver Webs Configuradas</button>
+        <button onclick="scanWebs()">Escanear Webs</button>
+    </div>
+
+    <!-- Registrar Web -->
+    <section id="register" class="tab active">
         <h2>Configurar una Página Web</h2>
         <form id="web-config-form">
             <label for="url">URL:</label>
@@ -37,13 +74,37 @@
         </form>
     </section>
 
-    <section id="scan-webs">
-        <h2>Escanear Webs</h2>
-        <button id="scanButton">Escanear Webs</button>
+    <!-- Ver Webs Configuradas -->
+    <section id="view" class="tab">
+        <h2>Webs Configuradas</h2>
+        <table id="webs-table">
+            <thead>
+                <tr>
+                    <th>URL</th>
+                    <th>Títulos</th>
+                    <th>Formatos de Fecha</th>
+                    <th>Palabras Clave</th>
+                    <th>Selector CSS para Pronósticos</th>
+                    <th>Selector CSS para Fecha</th>
+                    <th>Selector CSS para Títulos</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Aquí se mostrarían los registros de las webs -->
+            </tbody>
+        </table>
     </section>
 
     <script>
-        // Manejo de la configuración de la web
+        // Mostrar pestañas
+        function showTab(tabId) {
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.getElementById(tabId).classList.add('active');
+        }
+
+        // Guardar configuración de la web
         document.getElementById('web-config-form').addEventListener('submit', async function(event) {
             event.preventDefault();
 
@@ -69,22 +130,36 @@
                 });
 
                 alert(response.data.message);
+                // Añadir la web a la tabla
+                addWebToTable(response.data.web);
             } catch (error) {
                 console.error('Error al guardar configuración:', error);
                 alert('Error al guardar la configuración.');
             }
         });
 
-        // Funcionalidad para escanear webs
-        document.getElementById('scanButton').addEventListener('click', async function() {
-            try {
-                const response = await axios.get('http://localhost:3001/api/scan-webs');
-                alert('Escaneo completado: ' + response.data.message);
-            } catch (error) {
-                console.error('Error al escanear las webs:', error);
-                alert('Error al escanear las webs.');
-            }
-        });
+        // Función para agregar la web configurada a la tabla
+        function addWebToTable(web) {
+            const tableBody = document.querySelector('#webs-table tbody');
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${web.url}</td>
+                <td>${web.title_keywords.join(', ')}</td>
+                <td>${web.date_patterns.join(', ')}</td>
+                <td>${web.tip_patterns.join(', ')}</td>
+                <td>${web.html_structure.tips_container}</td>
+                <td>${web.html_structure.date_location}</td>
+                <td>${web.html_structure.title_location}</td>
+            `;
+            tableBody.appendChild(row);
+        }
+
+        // Función para escanear las webs (implementación de ejemplo)
+        function scanWebs() {
+            alert('Escaneando webs...');
+            // Aquí iría la lógica para ejecutar el escaneo de las webs configuradas.
+        }
     </script>
+
 </body>
 </html>
