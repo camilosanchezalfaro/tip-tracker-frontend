@@ -6,7 +6,7 @@ document.getElementById('scan-form').addEventListener('submit', async function(e
     resultDiv.innerHTML = 'Escaneando...';
 
     try {
-        const response = await fetch('https://tip-tracker-backend-git-main-camilosans-projects.vercel.app/api/scan', {
+        const response = await fetch('https://tip-tracker-backend-camilosans-projects.vercel.app/api/scan', {  // Actualiza la URL aquí
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -16,8 +16,8 @@ document.getElementById('scan-form').addEventListener('submit', async function(e
 
         const data = await response.json();
         
-        if (data.success && data.tips.length > 0) {
-            resultDiv.innerHTML = `<h3>Tips Encontrados:</h3><ul>${data.tips.map(tip => `<li>${tip}</li>`).join('')}</ul>`;
+        if (data.success && data.length > 0) {
+            resultDiv.innerHTML = `<h3>Tips Encontrados:</h3><ul>${data.map(tip => `<li>${tip}</li>`).join('')}</ul>`;
         } else {
             resultDiv.innerHTML = 'No se encontraron tips con esas palabras clave.';
         }
@@ -36,15 +36,17 @@ document.getElementById('add-dictionary-form').addEventListener('submit', async 
     const tipFormat = document.getElementById('tipFormat').value.trim();
 
     try {
-        const response = await fetch('https://tip-tracker-backend-git-main-camilosans-projects.vercel.app/api/add-dictionary', {
+        const response = await fetch('https://tip-tracker-backend-camilosans-projects.vercel.app/api/add-web-config', {  // Actualiza la URL aquí
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                title: [title],
-                dateFormat: [dateFormat],
-                tipFormat: [tipFormat]
+                url: 'http://example.com',  // Reemplazar con la URL que deseas agregar
+                selectorPronosticos: '.tip-selector',  // Selector de ejemplo
+                selectorFecha: '.date-selector',
+                selectorTitulos: '.title-selector',
+                palabrasClave: ['ganar', 'perder', 'empatar']  // Palabras clave de ejemplo
             })
         });
 
