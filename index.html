@@ -13,25 +13,25 @@
         <h2>Configurar una Página Web</h2>
         <form id="web-config-form">
             <label for="url">URL:</label>
-            <input type="text" id="url" name="url" required><br><br>
+            <input type="text" id="url" name="url" placeholder="Ej.: https://example.com/tips" required><br><br>
             
             <label for="title_keywords">Títulos (separados por coma):</label>
-            <input type="text" id="title_keywords" name="title_keywords" required><br><br>
+            <input type="text" id="title_keywords" name="title_keywords" placeholder="Ej.: pronóstico, tip, apuesta" required><br><br>
 
             <label for="date_patterns">Formatos de Fecha (separados por coma):</label>
-            <input type="text" id="date_patterns" name="date_patterns" required><br><br>
+            <input type="text" id="date_patterns" name="date_patterns" placeholder="Ej.: DD/MM/YYYY, dd.mm.aa, YYYY-MM-DD, MM-DD-YYYY" required><br><br>
 
             <label for="tip_patterns">Palabras Clave (separadas por coma):</label>
-            <input type="text" id="tip_patterns" name="tip_patterns" required><br><br>
+            <input type="text" id="tip_patterns" name="tip_patterns" placeholder="Ej.: pick, cuota, predicción" required><br><br>
 
             <label for="tips_container">Selector CSS para Pronósticos:</label>
-            <input type="text" id="tips_container" name="tips_container" required><br><br>
+            <input type="text" id="tips_container" name="tips_container" placeholder="Ej.: .tips-container > div.tip" required><br><br>
 
             <label for="date_location">Selector CSS para Fecha:</label>
-            <input type="text" id="date_location" name="date_location" required><br><br>
+            <input type="text" id="date_location" name="date_location" placeholder="Ej.: .date-header" required><br><br>
 
             <label for="title_location">Selector CSS para Títulos:</label>
-            <input type="text" id="title_location" name="title_location" required><br><br>
+            <input type="text" id="title_location" name="title_location" placeholder="Ej.: .title h1" required><br><br>
 
             <button type="submit">Guardar Configuración</button>
         </form>
