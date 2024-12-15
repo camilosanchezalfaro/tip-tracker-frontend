@@ -6,7 +6,7 @@ document.getElementById('scan-form').addEventListener('submit', async function(e
     resultDiv.innerHTML = 'Escaneando...';
 
     try {
-        const response = await fetch('https://tip-tracker-backend-camilosans-projects.vercel.app/api/scan', {  // Actualiza la URL aquí
+        const response = await fetch('tip-tracker-backend.vercel.app', {  // Actualiza la URL aquí
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -36,7 +36,7 @@ document.getElementById('add-dictionary-form').addEventListener('submit', async 
     const tipFormat = document.getElementById('tipFormat').value.trim();
 
     try {
-        const response = await fetch('https://tip-tracker-backend-camilosans-projects.vercel.app/api/add-web-config', {  // Actualiza la URL aquí
+        const response = await fetch('tip-tracker-backend.vercel.app', {  // Actualiza la URL aquí
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
