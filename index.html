@@ -1,28 +1,15 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Escanear Tips Deportivos</title>
-    <link rel="stylesheet" href="style.css">
-    <!-- Agregar CDN para Axios -->
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-</head>
-<body>
-    <h1>Escanear Tips Deportivos</h1>
+<form id="scan-form">
+    <label for="url">URL a escanear:</label>
+    <input type="text" id="url" name="url" required placeholder="Introduce la URL">
     
-    <form id="scan-form">
-        <label for="url">URL a escanear:</label>
-        <input type="text" id="url" name="url" required placeholder="Introduce la URL">
-        
-        <label for="keywords">Palabras clave (separadas por comas):</label>
-        <input type="text" id="keywords" name="keywords" required placeholder="Ejemplo: FREE FOOTBALL PREDICTIONS">
-        
-        <button type="submit">Escanear</button>
-    </form>
+    <label for="keywords">Palabras clave (separadas por comas):</label>
+    <input type="text" id="keywords" name="keywords" required placeholder="Ejemplo: FREE FOOTBALL PREDICTIONS">
     
-    <div id="result"></div> <!-- Aquí se mostrarán los tips encontrados -->
+    <label for="titles">Títulos (separados por comas):</label>
+    <input type="text" id="titles" name="titles" placeholder="Ejemplo: MATCH, PREDICTIONS">
     
-    <script src="script.js"></script>
-</body>
-</html>
+    <label for="formats">Formatos (separados por comas):</label>
+    <input type="text" id="formats" name="formats" placeholder="Ejemplo: ODD, PICK">
+    
+    <button type="submit">Escanear</button>
+</form>
