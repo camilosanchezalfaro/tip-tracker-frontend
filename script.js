@@ -11,7 +11,7 @@ document.getElementById('urlForm').addEventListener('submit', async (e) => {
 // Función para "escanear" la web
 async function scanWebsite(url) {
     try {
-        const response = await fetch('https://<TU-BACKEND>.vercel.app/api/scan', {
+        const response = await fetch('https://tip-tracker-backend.vercel.app/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
