@@ -28,6 +28,6 @@ async function scanWebsite(url) {
         }
     } catch (error) {
         console.error('Error al escanear la web:', error);
-        return '<p>Error al intentar escanear la web.</p>';
+        return '<p>Error al escanear la web.</p>';
     }
 }
