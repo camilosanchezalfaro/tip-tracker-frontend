@@ -1,52 +1,31 @@
-app.post('/api/scan', async (req, res) => {
-    const { url, keywords } = req.body;
+document.getElementById('scan-form').addEventListener('submit', async function(event) {
+    event.preventDefault(); // Evita el comportamiento por defecto del formulario
+    
+    const url = document.getElementById('url').value;
+    const keywords = document.getElementById('keywords').value.split(',').map(keyword => keyword.trim());
 
-    if (!url || !keywords || keywords.length === 0) {
-        return res.status(400).json({ success: false, message: 'URL o palabras clave no proporcionadas.' });
-    }
+    const resultDiv = document.getElementById('result');
+    resultDiv.innerHTML = 'Escaneando...';
 
     try {
-        const response = await axios.get(url);
-        const html = response.data;
-        const $ = cheerio.load(html);
+        const response = await fetch('https://tip-tracker-backend.vercel.app/api/scan', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ url, keywords }) // Enviamos también las palabras clave
+        });
 
-        let foundTips = [];
-
-        // Determinar el dominio de la URL para aplicar el método de escaneo adecuado
-        if (url.includes('japan-fixed.com')) {
-            // Lógica para japan-fixed.com
-            $('p').each((_, element) => {
-                const text = $(element).text().trim();
-                const regex = /MATCH: (.*?) – (.*?)\s+PICK: (.*?)\s+ODD: (.*?)\s+RESULTS: (.*?)$/;
-                const match = text.match(regex);
-                
-                if (match) {
-                    const [_, matchName, opponent, pick, odd, results] = match;
-                    foundTips.push({ match: matchName + " vs " + opponent, pick, odd, results });
-                }
-            });
-        }
-        else if (url.includes('otra-web.com')) {
-            // Lógica para otra web con diferente estructura
-            // Aquí se podría aplicar una estrategia similar, pero con diferentes selectores y reglas.
-            // Por ejemplo, si la otra web usa <div class="tip"> para mostrar los pronósticos:
-            $('.tip').each((_, element) => {
-                const matchName = $(element).find('.match-name').text();
-                const pick = $(element).find('.pick').text();
-                const odd = $(element).find('.odd').text();
-                const results = $(element).find('.results').text();
-                foundTips.push({ match: matchName, pick, odd, results });
-            });
-        }
-
-        if (foundTips.length > 0) {
-            return res.json({ success: true, tips: foundTips });
+        const data = await response.json();
+        
+        if (data.success && data.tips.length > 0) {
+            resultDiv.innerHTML = `<h3>Tips Encontrados:</h3><ul>${data.tips.map(tip => `<li>${tip}</li>`).join('')}</ul>`;
         } else {
-            return res.json({ success: false, message: 'No se encontraron tips con esas palabras clave.' });
+            resultDiv.innerHTML = 'No se encontraron tips con esas palabras clave.';
         }
 
     } catch (error) {
-        console.error('Error al analizar la URL:', error);
-        res.status(500).json({ success: false, message: 'Error al procesar la URL.' });
+        console.error('Error al escanear la web:', error);
+        resultDiv.innerHTML = 'Error al escanear la web. Intenta nuevamente.';
     }
 });
