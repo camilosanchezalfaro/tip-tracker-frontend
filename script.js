@@ -1,60 +1,33 @@
-const express = require('express');
-const cors = require('cors'); // Agregamos cors
-const axios = require('axios');
-const cheerio = require('cheerio');
-
-const app = express();
-const PORT = process.env.PORT || 3000;
-
-// Configuración de CORS
-app.use(cors({
-    origin: 'https://tip-tracker-frontend.vercel.app',  // El dominio de tu frontend
-    methods: ['GET', 'POST'],
-    allowedHeaders: ['Content-Type'],
-}));
-
-// Middleware para procesar JSON
-app.use(express.json());
-
-// Ruta para escanear la web
-app.post('/api/scan', async (req, res) => {
-    const { url } = req.body;
-
-    if (!url) {
-        return res.status(400).json({ success: false, message: 'URL no proporcionada.' });
-    }
-
+// Función para "escanear" la web
+async function scanWebsite(url) {
     try {
-        const response = await axios.get(url);
-        const html = response.data;
-
-        const $ = cheerio.load(html);
-
-        // Buscar términos clave
-        const keywords = ["FREE FOOTBALL PREDICTIONS TODAY", "FREE TIPS", "DAILY PREDICTIONS"];
-        let foundTips = [];
-
-        $('*').each((_, element) => {
-            const text = $(element).text().trim();
-            keywords.forEach(keyword => {
-                if (text.includes(keyword)) {
-                    foundTips.push(text);
-                }
-            });
+        // Realizar la solicitud POST al backend
+        const response = await fetch('https://tip-tracker-backend.vercel.app/api/scan', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ url })
         });
 
-        if (foundTips.length > 0) {
-            return res.json({ success: true, tips: foundTips });
+        // Obtener la respuesta
+        const data = await response.json();
+
+        // Mostrar los resultados
+        if (data.success) {
+            document.getElementById('result').innerHTML = `<p>Tips encontrados: <br> ${data.tips.join('<br>')}</p>`;
         } else {
-            return res.json({ success: false, message: 'No se encontraron tips en esta URL.' });
+            document.getElementById('result').innerHTML = '<p>No se encontraron tips en esta URL.</p>';
         }
-
     } catch (error) {
-        console.error('Error al analizar la URL:', error);
-        res.status(500).json({ success: false, message: 'Error al procesar la URL.' });
+        console.error('Error al escanear la web:', error);
+        document.getElementById('result').innerHTML = '<p>Error al escanear la web.</p>';
     }
-});
+}
 
-app.listen(PORT, () => {
-    console.log(`Servidor corriendo en el puerto ${PORT}`);
+// Manejar el evento de envío del formulario
+document.getElementById('scanForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+    const url = document.getElementById('urlInput').value;
+    scanWebsite(url);
 });
