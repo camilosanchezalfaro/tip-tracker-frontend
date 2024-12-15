@@ -3,21 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Escaneo de Tips Deportivos</title>
-    <style>
-        /* Aquí va tu estilo */
-    </style>
+    <title>Escanear Tips Deportivos</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Agrega tu archivo de estilos si tienes uno -->
 </head>
 <body>
     <h1>Escanear Tips Deportivos</h1>
-    <form id="scanForm">
-        <input type="url" id="urlInput" placeholder="Ingresa la URL" required>
+    
+    <form id="scan-form">
+        <label for="url">URL a escanear:</label>
+        <input type="text" id="url" name="url" required placeholder="Introduce la URL">
+        
+        <label for="keywords">Palabras clave (separadas por comas):</label>
+        <input type="text" id="keywords" name="keywords" required placeholder="Ejemplo: FREE FOOTBALL PREDICTIONS">
+        
         <button type="submit">Escanear</button>
     </form>
-    <div id="result"></div>
-
-    <!-- Cargar Axios desde el CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script type="module" src="script.js"></script>
+    
+    <div id="result"></div> <!-- Aquí se mostrarán los tips encontrados -->
+    
+    <script src="script.js"></script>
 </body>
 </html>
