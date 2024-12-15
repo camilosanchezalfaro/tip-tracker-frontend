@@ -5,34 +5,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Escanear Tips Deportivos</title>
     <link rel="stylesheet" href="style.css">
-    <!-- Agregar CDN para Axios -->
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
 <body>
     <h1>Escanear Tips Deportivos</h1>
     
-    <form id="scan-form">
-        <label for="url">URL a escanear:</label>
-        <input type="text" id="url" name="url" required placeholder="Introduce la URL">
-        
-        <button type="submit">Escanear</button>
-    </form>
-    
-    <div id="result"></div> <!-- Aquí se mostrarán los tips encontrados -->
-
-    <form id="add-dictionary-form">
+    <!-- Sección para agregar información al diccionario -->
+    <section id="add-dictionary">
         <h2>Agregar al Diccionario</h2>
-        <label for="title">Título de Pronóstico:</label>
-        <input type="text" id="title" name="title" placeholder="Ejemplo: FREE FOOTBALL PREDICTIONS">
+        <form id="add-dictionary-form">
+            <label for="title">Título de Pronóstico:</label>
+            <input type="text" id="title" name="title" placeholder="Ejemplo: FREE FOOTBALL PREDICTIONS">
+            
+            <label for="dateFormat">Formato de Fecha:</label>
+            <input type="text" id="dateFormat" name="dateFormat" placeholder="Ejemplo: 14.12.2024">
+            
+            <label for="tipFormat">Formato de Pronóstico:</label>
+            <input type="text" id="tipFormat" name="tipFormat" placeholder="Ejemplo: match">
+            
+            <button type="submit">Agregar al Diccionario</button>
+        </form>
+    </section>
+
+    <!-- Sección para escanear la URL -->
+    <section id="scan-url">
+        <h2>Escanear URL</h2>
+        <form id="scan-form">
+            <label for="url">URL a escanear:</label>
+            <input type="text" id="url" name="url" required placeholder="Introduce la URL">
+            
+            <button type="submit">Escanear</button>
+        </form>
         
-        <label for="dateFormat">Formato de Fecha:</label>
-        <input type="text" id="dateFormat" name="dateFormat" placeholder="Ejemplo: 14.12.2024">
-        
-        <label for="tipFormat">Formato de Pronóstico:</label>
-        <input type="text" id="tipFormat" name="tipFormat" placeholder="Ejemplo: match">
-        
-        <button type="submit">Agregar al Diccionario</button>
-    </form>
+        <div id="result"></div> <!-- Aquí se mostrarán los tips encontrados -->
+    </section>
 
     <script src="script.js"></script>
 </body>
