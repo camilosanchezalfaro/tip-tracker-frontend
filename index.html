@@ -33,6 +33,9 @@
             padding: 10px;
             text-align: left;
         }
+        #scan-results {
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
@@ -42,7 +45,7 @@
     <div class="tabs">
         <button onclick="showTab('register')">Registrar Web</button>
         <button onclick="showTab('view')">Ver Webs Configuradas</button>
-        <button onclick="scanWebs()">Escanear Webs</button>
+        <button onclick="showTab('scan')">Escanear Webs</button>
     </div>
 
     <!-- Registrar Web -->
@@ -93,6 +96,15 @@
                 <!-- Aquí se mostrarían los registros de las webs -->
             </tbody>
         </table>
+    </section>
+
+    <!-- Escanear Webs -->
+    <section id="scan" class="tab">
+        <h2>Escanear Webs</h2>
+        <button id="scanButton" onclick="scanWebs()">Escanear Webs</button>
+        <div id="scan-results">
+            <!-- Los resultados del escaneo se mostrarán aquí -->
+        </div>
     </section>
 
     <script>
@@ -154,10 +166,25 @@
             tableBody.appendChild(row);
         }
 
-        // Función para escanear las webs (implementación de ejemplo)
+        // Función para escanear las webs
         function scanWebs() {
-            alert('Escaneando webs...');
-            // Aquí iría la lógica para ejecutar el escaneo de las webs configuradas.
+            document.getElementById('scan-results').innerHTML = 'Escaneando webs...';
+
+            // Aquí deberías hacer una llamada a tu backend para realizar el escaneo
+            axios.get('http://localhost:3001/api/scan-webs')
+                .then(response => {
+                    const results = response.data.results;
+                    let html = '<ul>';
+                    results.forEach(result => {
+                        html += `<li>${result}</li>`;
+                    });
+                    html += '</ul>';
+                    document.getElementById('scan-results').innerHTML = html;
+                })
+                .catch(error => {
+                    console.error('Error al escanear las webs:', error);
+                    document.getElementById('scan-results').innerHTML = 'Hubo un error al escanear las webs.';
+                });
         }
     </script>
 
