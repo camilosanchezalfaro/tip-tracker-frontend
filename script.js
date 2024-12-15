@@ -1,33 +1,31 @@
-// Función para "escanear" la web
-async function scanWebsite(url) {
+document.getElementById('scan-form').addEventListener('submit', async function(event) {
+    event.preventDefault(); // Evita el comportamiento por defecto del formulario
+    
+    const url = document.getElementById('url').value;
+    const keywords = document.getElementById('keywords').value.split(',').map(keyword => keyword.trim());
+
+    const resultDiv = document.getElementById('result');
+    resultDiv.innerHTML = 'Escaneando...';
+
     try {
-        // Realizar la solicitud POST al backend
         const response = await fetch('https://tip-tracker-backend.vercel.app/api/scan', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ url })
+            body: JSON.stringify({ url, keywords }) // Enviamos también las palabras clave
         });
 
-        // Obtener la respuesta
         const data = await response.json();
-
-        // Mostrar los resultados
-        if (data.success) {
-            document.getElementById('result').innerHTML = `<p>Tips encontrados: <br> ${data.tips.join('<br>')}</p>`;
+        
+        if (data.success && data.tips.length > 0) {
+            resultDiv.innerHTML = `<h3>Tips Encontrados:</h3><ul>${data.tips.map(tip => `<li>${tip}</li>`).join('')}</ul>`;
         } else {
-            document.getElementById('result').innerHTML = '<p>No se encontraron tips en esta URL.</p>';
+            resultDiv.innerHTML = 'No se encontraron tips con esas palabras clave.';
         }
+
     } catch (error) {
         console.error('Error al escanear la web:', error);
-        document.getElementById('result').innerHTML = '<p>Error al escanear la web.</p>';
+        resultDiv.innerHTML = 'Error al escanear la web. Intenta nuevamente.';
     }
-}
-
-// Manejar el evento de envío del formulario
-document.getElementById('scanForm').addEventListener('submit', function(event) {
-    event.preventDefault();
-    const url = document.getElementById('urlInput').value;
-    scanWebsite(url);
 });
