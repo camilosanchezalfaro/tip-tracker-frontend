@@ -1,63 +1,115 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 
-function App() {
-  const [configurations, setConfigurations] = useState([]);
-  const [selectedConfig, setSelectedConfig] = useState('');
-  const [pronosticos, setPronosticos] = useState([]);
+function RegisterWeb() {
+  const [url, setUrl] = useState('');
+  const [titleKeywords, setTitleKeywords] = useState('');
+  const [datePatterns, setDatePatterns] = useState('');
+  const [tipPatterns, setTipPatterns] = useState('');
+  const [tipsContainer, setTipsContainer] = useState('');
+  const [dateLocation, setDateLocation] = useState('');
+  const [titleLocation, setTitleLocation] = useState('');
 
-  useEffect(() => {
-    // Obtener las configuraciones de las webs desde el backend
-    async function fetchConfigurations() {
-      const response = await axios.get('/api/web-configurations');
-      setConfigurations(response.data);
-    }
-    fetchConfigurations();
-  }, []);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const configData = {
+      url,
+      title_keywords: titleKeywords.split(','),
+      date_patterns: datePatterns.split(','),
+      tip_patterns: tipPatterns.split(','),
+      html_structure: {
+        tips_container: tipsContainer,
+        date_location: dateLocation,
+        title_location: titleLocation,
+      },
+    };
 
-  const handleScan = async () => {
     try {
-      const response = await axios.post('/scan-website', { webId: selectedConfig });
-      setPronosticos(response.data);
+      const response = await axios.post('http://localhost:3001/api/add-web-config', configData);
+      if (response.data.success) {
+        alert('Configuración guardada correctamente');
+      }
     } catch (error) {
-      console.error("Error al escanear la web:", error);
+      console.error("Error al guardar configuración:", error);
+      alert('Hubo un error al guardar la configuración');
     }
   };
 
   return (
     <div>
-      <h1>Escanear Pronósticos</h1>
-
-      <div>
-        <label htmlFor="webConfig">Selecciona una web para escanear:</label>
-        <select
-          id="webConfig"
-          value={selectedConfig}
-          onChange={(e) => setSelectedConfig(e.target.value)}
-        >
-          <option value="">Seleccione...</option>
-          {configurations.map((config) => (
-            <option key={config._id} value={config._id}>
-              {config.url}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      <button onClick={handleScan}>Escanear Web</button>
-
-      <div>
-        <h2>Pronósticos encontrados:</h2>
-        <ul>
-          {pronosticos.map((pronostico, index) => (
-            <li key={index}>
-              <strong>{pronostico.titulo}</strong> ({pronostico.fecha}): {pronostico.pronostico}
-            </li>
-          ))}
-        </ul>
-      </div>
+      <h2>Configurar una Página Web</h2>
+      <form onSubmit={handleSubmit}>
+        <label>
+          URL:
+          <input
+            type="text"
+            value={url}
+            onChange={(e) => setUrl(e.target.value)}
+            required
+          />
+        </label>
+        <br />
+        <label>
+          Títulos (separados por coma):
+          <input
+            type="text"
+            value={titleKeywords}
+            onChange={(e) => setTitleKeywords(e.target.value)}
+            required
+          />
+        </label>
+        <br />
+        <label>
+          Formatos de Fecha (separados por coma):
+          <input
+            type="text"
+            value={datePatterns}
+            onChange={(e) => setDatePatterns(e.target.value)}
+            required
+          />
+        </label>
+        <br />
+        <label>
+          Palabras Clave para los Pronósticos (separados por coma):
+          <input
+            type="text"
+            value={tipPatterns}
+            onChange={(e) => setTipPatterns(e.target.value)}
+            required
+          />
+        </label>
+        <br />
+        <label>
+          Selector CSS para Pronósticos (opcional):
+          <input
+            type="text"
+            value={tipsContainer}
+            onChange={(e) => setTipsContainer(e.target.value)}
+          />
+        </label>
+        <br />
+        <label>
+          Selector CSS para Fecha (opcional):
+          <input
+            type="text"
+            value={dateLocation}
+            onChange={(e) => setDateLocation(e.target.value)}
+          />
+        </label>
+        <br />
+        <label>
+          Selector CSS para Título (opcional):
+          <input
+            type="text"
+            value={titleLocation}
+            onChange={(e) => setTitleLocation(e.target.value)}
+          />
+        </label>
+        <br />
+        <button type="submit">Guardar Configuración</button>
+      </form>
     </div>
   );
 }
 
-export default App;
+export default RegisterWeb;
