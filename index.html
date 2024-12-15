@@ -114,14 +114,9 @@
         <table id="records-table">
             <thead>
                 <tr>
-                    <th>ID</th>
-                    <th>URL</th>
-                    <th>Títulos</th>
-                    <th>Formatos de Fecha</th>
-                    <th>Palabras Clave</th>
-                    <th>Selector CSS para Pronósticos</th>
-                    <th>Selector CSS para Fecha</th>
-                    <th>Selector CSS para Títulos</th>
+                    <th>URL Web</th>
+                    <th>Fecha</th>
+                    <th>Pronóstico Almacenado</th>
                 </tr>
             </thead>
             <tbody>
@@ -192,7 +187,7 @@
         // Obtener registros almacenados
         async function fetchRecords() {
             try {
-                const response = await axios.get('http://localhost:3001/api/get-web-configs');
+                const response = await axios.get('http://localhost:3001/api/get-pronosticos');
                 const records = response.data;
                 const tableBody = document.querySelector('#records-table tbody');
                 tableBody.innerHTML = ''; // Limpiar tabla antes de agregar nuevos registros
@@ -200,14 +195,9 @@
                 records.forEach(record => {
                     const row = document.createElement('tr');
                     row.innerHTML = `
-                        <td>${record.id}</td>
                         <td>${record.url}</td>
-                        <td>${record.title_keywords.join(', ')}</td>
-                        <td>${record.date_patterns.join(', ')}</td>
-                        <td>${record.tip_patterns.join(', ')}</td>
-                        <td>${record.html_structure.tips_container}</td>
-                        <td>${record.html_structure.date_location}</td>
-                        <td>${record.html_structure.title_location}</td>
+                        <td>${record.fecha}</td>
+                        <td>${record.pronostico}</td>
                     `;
                     tableBody.appendChild(row);
                 });
