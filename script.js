@@ -3,6 +3,10 @@ document.getElementById('scan-form').addEventListener('submit', async function(e
     
     const url = document.getElementById('url').value;
     const keywords = document.getElementById('keywords').value.split(',').map(keyword => keyword.trim());
+    
+    // Obtener los títulos y formatos
+    const titles = document.getElementById('titles').value.split(',').map(title => title.trim());
+    const formats = document.getElementById('formats').value.split(',').map(format => format.trim());
 
     const resultDiv = document.getElementById('result');
     resultDiv.innerHTML = 'Escaneando...';
@@ -13,7 +17,7 @@ document.getElementById('scan-form').addEventListener('submit', async function(e
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ url, keywords }) // Enviamos también las palabras clave
+            body: JSON.stringify({ url, keywords, titles, formats }) // Enviamos títulos y formatos
         });
 
         const data = await response.json();
