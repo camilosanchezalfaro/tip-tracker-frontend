@@ -6,7 +6,6 @@
     <title>Gestión de Páginas Web</title>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <style>
-        /* Estilos básicos para las pestañas */
         .tab {
             display: none;
         }
@@ -101,7 +100,8 @@
     <!-- Escanear Webs -->
     <section id="scan" class="tab">
         <h2>Escanear Webs</h2>
-        <button id="scanButton" onclick="scanWebs()">Escanear Webs</button>
+        <button id="scanButton" onclick="startScan()">Escanear Webs</button>
+        <button id="stopButton" onclick="stopScan()" style="display: none;">Detener Escaneo</button>
         <div id="scan-results">
             <!-- Los resultados del escaneo se mostrarán aquí -->
         </div>
@@ -115,6 +115,8 @@
             });
             document.getElementById(tabId).classList.add('active');
         }
+
+        let cancelTokenSource;
 
         // Guardar configuración de la web
         document.getElementById('web-config-form').addEventListener('submit', async function(event) {
@@ -166,25 +168,42 @@
             tableBody.appendChild(row);
         }
 
-        // Función para escanear las webs
-        function scanWebs() {
+        // Iniciar escaneo
+        function startScan() {
+            cancelTokenSource = axios.CancelToken.source(); // Crear un nuevo token de cancelación
+            document.getElementById('scanButton').style.display = 'none';
+            document.getElementById('stopButton').style.display = 'inline-block';
             document.getElementById('scan-results').innerHTML = 'Escaneando webs...';
 
-            // Aquí deberías hacer una llamada a tu backend para realizar el escaneo
-            axios.get('http://localhost:3001/api/scan-webs')
-                .then(response => {
-                    const results = response.data.results;
-                    let html = '<ul>';
-                    results.forEach(result => {
-                        html += `<li>${result}</li>`;
-                    });
-                    html += '</ul>';
-                    document.getElementById('scan-results').innerHTML = html;
-                })
-                .catch(error => {
+            axios.get('http://localhost:3001/api/scan-webs', {
+                cancelToken: cancelTokenSource.token
+            })
+            .then(response => {
+                const results = response.data.results;
+                let html = '<ul>';
+                results.forEach(result => {
+                    html += `<li>${result}</li>`;
+                });
+                html += '</ul>';
+                document.getElementById('scan-results').innerHTML = html;
+            })
+            .catch(error => {
+                if (axios.isCancel(error)) {
+                    document.getElementById('scan-results').innerHTML = 'Escaneo detenido.';
+                } else {
                     console.error('Error al escanear las webs:', error);
                     document.getElementById('scan-results').innerHTML = 'Hubo un error al escanear las webs.';
-                });
+                }
+            });
+        }
+
+        // Detener escaneo
+        function stopScan() {
+            if (cancelTokenSource) {
+                cancelTokenSource.cancel('Escaneo detenido por el usuario');
+            }
+            document.getElementById('scanButton').style.display = 'inline-block';
+            document.getElementById('stopButton').style.display = 'none';
         }
     </script>
 
