@@ -15,28 +15,25 @@
         <label for="url">URL a escanear:</label>
         <input type="text" id="url" name="url" required placeholder="Introduce la URL">
         
-        <label for="keywords">Palabras clave (separadas por comas):</label>
-        <input type="text" id="keywords" name="keywords" required placeholder="Ejemplo: FREE FOOTBALL PREDICTIONS">
-        
         <button type="submit">Escanear</button>
-    </form>
-
-    <h2>Agregar a Diccionarios</h2>
-    <form id="add-dictionary-form">
-        <label for="title">Título de Pronóstico:</label>
-        <input type="text" id="title" name="title" required placeholder="Ejemplo: FREE FOOTBALL PREDICTIONS">
-        
-        <label for="date-format">Formato de Fecha:</label>
-        <input type="text" id="date-format" name="date-format" required placeholder="Ejemplo: 14-12-2024">
-        
-        <label for="prediction-format">Formato de Pronóstico:</label>
-        <input type="text" id="prediction-format" name="prediction-format" required placeholder="Ejemplo: MATCH, PICK, ODD">
-        
-        <button type="submit">Agregar al Diccionario</button>
     </form>
     
     <div id="result"></div> <!-- Aquí se mostrarán los tips encontrados -->
-    
+
+    <form id="add-dictionary-form">
+        <h2>Agregar al Diccionario</h2>
+        <label for="title">Título de Pronóstico:</label>
+        <input type="text" id="title" name="title" placeholder="Ejemplo: FREE FOOTBALL PREDICTIONS">
+        
+        <label for="dateFormat">Formato de Fecha:</label>
+        <input type="text" id="dateFormat" name="dateFormat" placeholder="Ejemplo: 14.12.2024">
+        
+        <label for="tipFormat">Formato de Pronóstico:</label>
+        <input type="text" id="tipFormat" name="tipFormat" placeholder="Ejemplo: match">
+        
+        <button type="submit">Agregar al Diccionario</button>
+    </form>
+
     <script src="script.js"></script>
 </body>
 </html>
