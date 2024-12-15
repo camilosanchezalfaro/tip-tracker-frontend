@@ -1,33 +1,60 @@
-document.getElementById('urlForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const url = document.getElementById('urlInput').value;
+const express = require('express');
+const cors = require('cors'); // Agregamos cors
+const axios = require('axios');
+const cheerio = require('cheerio');
 
-    // Llamada al backend para analizar la URL
-    const result = await scanWebsite(url);
+const app = express();
+const PORT = process.env.PORT || 3000;
 
-    document.getElementById('result').innerHTML = result;
-});
+// Configuración de CORS
+app.use(cors({
+    origin: 'https://tip-tracker-frontend.vercel.app',  // El dominio de tu frontend
+    methods: ['GET', 'POST'],
+    allowedHeaders: ['Content-Type'],
+}));
 
-// Función para "escanear" la web
-async function scanWebsite(url) {
+// Middleware para procesar JSON
+app.use(express.json());
+
+// Ruta para escanear la web
+app.post('/api/scan', async (req, res) => {
+    const { url } = req.body;
+
+    if (!url) {
+        return res.status(400).json({ success: false, message: 'URL no proporcionada.' });
+    }
+
     try {
-        const response = await fetch('https://tip-tracker-backend.vercel.app/api/scan', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ url })
+        const response = await axios.get(url);
+        const html = response.data;
+
+        const $ = cheerio.load(html);
+
+        // Buscar términos clave
+        const keywords = ["FREE FOOTBALL PREDICTIONS TODAY", "FREE TIPS", "DAILY PREDICTIONS"];
+        let foundTips = [];
+
+        $('*').each((_, element) => {
+            const text = $(element).text().trim();
+            keywords.forEach(keyword => {
+                if (text.includes(keyword)) {
+                    foundTips.push(text);
+                }
+            });
         });
 
-        const data = await response.json();
-
-        if (data.success) {
-            return `<p>Tips encontrados: <br> ${data.tips.join('<br>')}</p>`;
+        if (foundTips.length > 0) {
+            return res.json({ success: true, tips: foundTips });
         } else {
-            return '<p>No se encontraron tips en esta URL.</p>';
+            return res.json({ success: false, message: 'No se encontraron tips en esta URL.' });
         }
+
     } catch (error) {
-        console.error('Error al escanear la web:', error);
-        return '<p>Error al escanear la web.</p>';
+        console.error('Error al analizar la URL:', error);
+        res.status(500).json({ success: false, message: 'Error al procesar la URL.' });
     }
-}
+});
+
+app.listen(PORT, () => {
+    console.log(`Servidor corriendo en el puerto ${PORT}`);
+});
