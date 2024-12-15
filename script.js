@@ -6,20 +6,12 @@ document.getElementById('scan-form').addEventListener('submit', async function(e
     resultDiv.innerHTML = 'Escaneando...';
 
     try {
-        // Se agrega el paso de enviar también las palabras clave
         const response = await fetch('https://tip-tracker-backend.vercel.app/api/scan', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ 
-                url,
-                keywords: {
-                    titles: ["FREE DAILY PREDICTIONS", "FREE FOOTBALL PREDICTIONS"], // Aquí van los títulos
-                    dateFormats: ["\\d{2}-\\d{2}-\\d{2}", "\\d{2}/\\d{2}/\\d{2}"], // Aquí van los formatos de fecha
-                    tipFormats: ["MATCH", "PICK", "ODD"] // Aquí van los formatos de pronóstico
-                }
-            })
+            body: JSON.stringify({ url }) // Solo enviamos la URL
         });
 
         const data = await response.json();
