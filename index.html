@@ -1,45 +1,73 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Escanear Tips Deportivos</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Configuración de Páginas Web</title>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
 <body>
-    <h1>Escanear Tips Deportivos</h1>
-    
-    <!-- Sección para agregar información al diccionario -->
-    <section id="add-dictionary">
-        <h2>Agregar al Diccionario</h2>
-        <form id="add-dictionary-form">
-            <label for="title">Título de Pronóstico:</label>
-            <input type="text" id="title" name="title" placeholder="Ejemplo: FREE FOOTBALL PREDICTIONS">
+    <h1>Gestión de Configuración de Webs</h1>
+
+    <section id="add-web-config">
+        <h2>Configurar una Página Web</h2>
+        <form id="web-config-form">
+            <label for="url">URL:</label>
+            <input type="text" id="url" name="url" required><br><br>
             
-            <label for="dateFormat">Formato de Fecha:</label>
-            <input type="text" id="dateFormat" name="dateFormat" placeholder="Ejemplo: 14.12.2024">
-            
-            <label for="tipFormat">Formato de Pronóstico:</label>
-            <input type="text" id="tipFormat" name="tipFormat" placeholder="Ejemplo: match">
-            
-            <button type="submit">Agregar al Diccionario</button>
+            <label for="title_keywords">Títulos (separados por coma):</label>
+            <input type="text" id="title_keywords" name="title_keywords" required><br><br>
+
+            <label for="date_patterns">Formatos de Fecha (separados por coma):</label>
+            <input type="text" id="date_patterns" name="date_patterns" required><br><br>
+
+            <label for="tip_patterns">Palabras Clave (separadas por coma):</label>
+            <input type="text" id="tip_patterns" name="tip_patterns" required><br><br>
+
+            <label for="tips_container">Selector CSS para Pronósticos:</label>
+            <input type="text" id="tips_container" name="tips_container" required><br><br>
+
+            <label for="date_location">Selector CSS para Fecha:</label>
+            <input type="text" id="date_location" name="date_location" required><br><br>
+
+            <label for="title_location">Selector CSS para Títulos:</label>
+            <input type="text" id="title_location" name="title_location" required><br><br>
+
+            <button type="submit">Guardar Configuración</button>
         </form>
     </section>
 
-    <!-- Sección para escanear la URL -->
-    <section id="scan-url">
-        <h2>Escanear URL</h2>
-        <form id="scan-form">
-            <label for="url">URL a escanear:</label>
-            <input type="text" id="url" name="url" required placeholder="Introduce la URL">
-            
-            <button type="submit">Escanear</button>
-        </form>
-        
-        <div id="result"></div> <!-- Aquí se mostrarán los tips encontrados -->
-    </section>
+    <script>
+        document.getElementById('web-config-form').addEventListener('submit', async function(event) {
+            event.preventDefault();
 
-    <script src="script.js"></script>
+            const url = document.getElementById('url').value;
+            const title_keywords = document.getElementById('title_keywords').value.split(',').map(s => s.trim());
+            const date_patterns = document.getElementById('date_patterns').value.split(',').map(s => s.trim());
+            const tip_patterns = document.getElementById('tip_patterns').value.split(',').map(s => s.trim());
+            const tips_container = document.getElementById('tips_container').value;
+            const date_location = document.getElementById('date_location').value;
+            const title_location = document.getElementById('title_location').value;
+
+            try {
+                const response = await axios.post('http://localhost:3001/api/add-web-config', {
+                    url,
+                    title_keywords,
+                    date_patterns,
+                    tip_patterns,
+                    html_structure: {
+                        tips_container,
+                        date_location,
+                        title_location
+                    }
+                });
+
+                alert(response.data.message);
+            } catch (error) {
+                console.error('Error al guardar configuración:', error);
+                alert('Error al guardar la configuración.');
+            }
+        });
+    </script>
 </body>
 </html>
