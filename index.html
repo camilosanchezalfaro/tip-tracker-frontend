@@ -3,19 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Scanner de Tips Deportivos</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Escaneo de Tips Deportivos</title>
+    <style>
+        /* Aquí va tu estilo */
+    </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Scanner de Tips Deportivos</h1>
-        <form id="urlForm">
-            <label for="urlInput">Ingresa una URL:</label>
-            <input type="url" id="urlInput" required placeholder="https://example.com">
-            <button type="submit">Escanear</button>
-        </form>
-        <div id="result"></div>
-    </div>
-    <script src="script.js"></script>
+    <h1>Escanear Tips Deportivos</h1>
+    <form id="scanForm">
+        <input type="url" id="urlInput" placeholder="Ingresa la URL" required>
+        <button type="submit">Escanear</button>
+    </form>
+    <div id="result"></div>
+
+    <!-- Cargar Axios desde el CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script type="module" src="script.js"></script>
 </body>
 </html>
